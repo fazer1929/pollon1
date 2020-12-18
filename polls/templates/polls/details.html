@@ -3,17 +3,14 @@
 
 <form action="{% url 'polls:vote' question.link %}" method="post">
     <p class="lead" style="font-weight: 600;">
-        {{question}}
+       Q.  {{question}}
 </p>
-<br>
-<br>
-<br>
 <br>
     {% csrf_token %}
     {% for choice in question.choice_set.all %}
         <div class="form-check">
             <input type="radio" name="choice" class="form-check-input" id="choice{{forloop.counter}}" value="{{choice.id}}">
-            <label for="choice{{forloop.counter}}">{{choice.choice_text}}</label>
+            <label class="form-check-label" for="choice{{forloop.counter}}">{{choice.choice_text}}</label>
         </div>
     {% endfor %}
     <input type="submit" value="Vote" class="btn btn-success btn-lg btn-block mt-4">

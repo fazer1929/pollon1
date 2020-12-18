@@ -3,7 +3,7 @@ import datetime
 from . import helpers
 # Create your models here.
 class Question(models.Model):
-    question_text = models.CharField(max_length=300)
+    question_text = models.TextField(max_length=400)
     pub_date = models.DateTimeField('Date Published',default=datetime.datetime.now())
     open_for_all = models.BooleanField(default=True)
     def __str__(self):

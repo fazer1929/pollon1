@@ -1,5 +1,6 @@
 {% extends 'polls/layout.html' %}
 {% block body %}
+{% load crispy_forms_tags %}
 <style>
     h1,h3{
         text-align: center;
@@ -13,17 +14,42 @@
         margin-bottom: 10px;
     }
 </style>
+ 
     <h1 class="heading-1 align-center">Add Question</h1>
-    <form action="{% url 'polls:addPoll' %}" method="POST">
+    <form class="form mb-4" action="{% url 'polls:addPoll' %}" method="POST">
         {%csrf_token%}
-        {{q_form}}
+        {{q_form|crispy}}
         <br>
         <br>
         <h3 class="heading-1 align-center">Choices</h3>
         {{c_form}}
+        {% if not submitted %}
         <input class="btn btn-success btn-large" type="submit" name="submit" id="submit" value="Create">
+        {% else %}
+        <input class="btn btn-info btn-large" disabled name="submit" id="submit" value="Created">
+        {% endif %}
     </form>
-    
+    <div class="mt-3" style="text-align: center;">
+    {% if qid %}
+    <input type="text" value="{{request.get_host}}/polls/{{qid}}" id="myInput" class="form-control mb-2" disabled >
+    <button class="btn btn-outline-success mt-2" id="copyButton">Copy Link</button>
+    {% endif %}
+    </div>
 
+<script>
+    window.onload = () => {
+         function myCopy() {
+  var copyText = document.getElementById("myInput");
+
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+  document.execCommand("copy");
+
+}
+    const btn = document.getElementById('copyButton')
+    btn.addEventListener('click',() => myCopy)
+   }
+</script>
     
 {% endblock %}

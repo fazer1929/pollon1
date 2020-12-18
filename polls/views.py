@@ -13,9 +13,13 @@ class Get_Question(forms.ModelForm):
     class Meta:
         model = Question
         fields = ['question_text','open_for_all']
+        widgets = {
+          'question_text': forms.Textarea(attrs={'rows':4, 'cols':15}),
+        }
      
 class Get_Choices(forms.Form):
-    choice = forms.CharField(label="Enter A Choice Seperated By ';' ",widget=forms.Textarea)
+    choice = forms.CharField(label="Enter A Choice Seperated By ';' ",widget=forms.Textarea(attrs={'rows':2, 'cols':15}))
+    
 
 #Get Quesitons
 def index(request):
@@ -81,6 +85,9 @@ def addPoll(request):
         c_form = Get_Choices(request.POST,prefix='choice')
         if(c_form.is_valid() and q_form.is_valid()):
             question = q_form.save()
+            print(question)
+            qid = question.link()
+            # qid= helpers.hextoint(ques) 
             data = c_form.cleaned_data["choice"]
             choices =data.split(";")
             print(choices)
@@ -88,12 +95,18 @@ def addPoll(request):
                 ch = Choice(choice_text=choice,question=question)
                 ch.save()
             print(q_form.cleaned_data)
-            q_form.save()
-        return HttpResponseRedirect(reverse('polls:index'))
+
+        return render(request,"polls/addPoll.html",{
+            "q_form": q_form,
+            "c_form": c_form,
+            'submitted':True,
+            "qid":qid
+        })
     else:
         c_form = Get_Choices(prefix="choice")
         q_form = Get_Question(prefix='question')
         return render(request,"polls/addPoll.html",{
             "q_form": q_form,
-            "c_form": c_form
+            "c_form": c_form,
+            'submitted':False,
         })
