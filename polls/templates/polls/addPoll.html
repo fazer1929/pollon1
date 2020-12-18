@@ -1,0 +1,29 @@
+{% extends 'polls/layout.html' %}
+{% block body %}
+<style>
+    h1,h3{
+        text-align: center;
+    }
+    input[type='text'],textarea{
+        display: block;
+    }
+    textarea{
+        width: 100%;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+</style>
+    <h1 class="heading-1 align-center">Add Question</h1>
+    <form action="{% url 'polls:addPoll' %}" method="POST">
+        {%csrf_token%}
+        {{q_form}}
+        <br>
+        <br>
+        <h3 class="heading-1 align-center">Choices</h3>
+        {{c_form}}
+        <input class="btn btn-success btn-large" type="submit" name="submit" id="submit" value="Create">
+    </form>
+    
+
+    
+{% endblock %}

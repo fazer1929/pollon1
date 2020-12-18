@@ -1,0 +1,35 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'pages/home.css' %}">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+    <title>Pollon</title>
+</head>
+<body>
+    <div class="jumbotron">
+        <div class="heading">Pollon - Want a poll? We got you.</div>
+        <div class="split">
+            <div class="left">
+                <div class="link">
+                <a href="{% url 'polls:addPoll' %}" class="jumbotron-text">Create A Poll</a>
+
+                </div>
+            </div>
+            <div class="right">
+                <div class="link">
+                <a href="{% url 'polls:index' %}" class="jumbotron-text">See Existing Polls</a>
+
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            Made With Love For <strong>Who Wants To Be A Hackionaire?</strong>
+        </div>
+    </div>
+</body>
+</html>
