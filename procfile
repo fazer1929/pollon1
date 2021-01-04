@@ -1,1 +1,1 @@
-web: gunicorn pollo:app
+web: gunicorn pollon.wsgi
