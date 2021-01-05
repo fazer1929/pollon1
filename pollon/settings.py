@@ -26,7 +26,7 @@ SECRET_KEY = 'av2kbdx*d4qrvvkk)k+(zjt85e1j%#we(6l@&cx5)r0#rq@#2p'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','https://pollon-fazer.herokuapp.com/']
+ALLOWED_HOSTS = ['127.0.0.1',]
 
 
 # Application definition
