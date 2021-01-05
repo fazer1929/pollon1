@@ -1,0 +1,15 @@
+{% extends 'polls/layout.html' %} {% block body %}
+<div style="text-align: center">
+	<h3>It Appears That You Have Already Voted On This Poll.</h3>
+	<a
+		class="btn btn-outline-success mb-4 mt-4"
+		href="{% url 'polls:results' question.link %}"
+	>
+		Click Here To See Current Results
+	</a>
+	<br />
+	<a class="btn btn-outline-primary mb-4 mt-4" href="{% url 'polls:index' %}">
+		Click Here To Go To Polls
+	</a>
+</div>
+{% endblock %}

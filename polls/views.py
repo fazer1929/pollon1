@@ -46,6 +46,15 @@ def details(request,question_id):
     qid= helpers.hextoint(question_id)
     try:
         question = Question.objects.get(pk=int(qid))
+        if question.login_required:
+            if not request.user.is_authenticated:
+                pass
+            else: 
+                if len(question.voted_by.filter(pk=request.user.id))>0:
+                    return render(request,'polls/alreadyVoted.html',{
+                        'question':question
+                    })
+
     except Question.DoesNotExist:
         raise Http404("Question Dies Not Exist")
     return render(request,"polls/details.html",{
@@ -63,15 +72,10 @@ def results(request,question_id):
 #Vote For A Poll
 def vote(request,question_id):
     qid= helpers.hextoint(question_id)
-    
     question = get_object_or_404(Question,pk=qid)
-    if question.voted_by == request.user:
-        return render(request,"polls/details.html",{
-            'question':question,
-            "error":"You Have Already Voted",
-        })
-    else:
-        pass
+    if question.login_required:
+        question.voted_by.add(request.user)
+
     try:
         selected_choice = question.choice_set.get(pk=request.POST['choice'])
     except(KeyError,Choice.DoesNotExist):
