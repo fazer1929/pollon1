@@ -1,0 +1,17 @@
+<nav class="navbar navbar-dark bg-primary mb-4">
+    <div class="container">
+        <div class="navbar-brand"> <a href="{% url 'pages:index' %}" style="color: white;text-decoration: none; font-weight: 800; letter-spacing: 2px; font-size: 1.5rem;"> Pollon</a></div>
+        
+    </div>
+    <div style="display: flex; flex-direction: row;" class="navbar-nav">
+      <a class="nav-item nav-link active mr-4 font-weight-bold" href="{% url 'polls:addPoll' %}">Add A Poll</a>
+      {% if user.is_authenticated %}
+        <p class="nav-item nav-link mr-4 ">{{user.username}}</p>
+
+      <a class="nav-item nav-link  mr-4 font-weight-bold" href="/accounts/logout">Logout</a>
+
+      {% else %}
+      <a class="nav-item nav-link  mr-4 font-weight-bold" href="/accounts/login">Login</a>
+      {% endif %}
+    </div>
+</nav>
