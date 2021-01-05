@@ -85,16 +85,13 @@ def addPoll(request):
         c_form = Get_Choices(request.POST,prefix='choice')
         if(c_form.is_valid() and q_form.is_valid()):
             question = q_form.save()
-            print(question)
             qid = question.link()
             # qid= helpers.hextoint(ques) 
             data = c_form.cleaned_data["choice"]
             choices =data.split(";")
-            print(choices)
             for choice in choices:
                 ch = Choice(choice_text=choice,question=question)
                 ch.save()
-            print(q_form.cleaned_data)
 
         return render(request,"polls/addPoll.html",{
             "q_form": q_form,

@@ -16,6 +16,7 @@ class QuestionAdmin(admin.ModelAdmin):
     fieldsets=[(None,{'fields':['question_text']}),
     ('Date Information', {'fields':['pub_date'],'classes':['collapse']}),
     ('Open For All', {'fields':['open_for_all']}),
+    ('voted_by', {'fields':['voted_by']})
     ]
     inlines=[ChoiceInline]
     

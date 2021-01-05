@@ -1,15 +1,18 @@
 from django.db import models
 import datetime
+from django.contrib.auth.models import User
 from . import helpers
+
 # Create your models here.
 class Question(models.Model):
     question_text = models.TextField(max_length=400)
     pub_date = models.DateTimeField('Date Published',default=datetime.datetime.now())
     open_for_all = models.BooleanField(default=True)
+    voted_by = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
     def __str__(self):
         return self.question_text
     def link(self):
-        return helpers.inttohex(self.id) 
+        return helpers.inttohex(self.id)
 
 class Choice(models.Model):
     question = models.ForeignKey(Question,on_delete=models.CASCADE)
