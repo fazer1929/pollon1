@@ -16,14 +16,27 @@ class Get_Question(forms.ModelForm):
         widgets = {
           'question_text': forms.Textarea(attrs={'rows':4, 'cols':15}),
         }
-     
+
+class Get_Question_Auth(forms.ModelForm):
+    class Meta:
+        model = Question
+        fields = ['question_text','open_for_all','login_required']
+        widgets = {
+          'question_text': forms.Textarea(attrs={'rows':4, 'cols':15}),
+        }
+
 class Get_Choices(forms.Form):
     choice = forms.CharField(label="Enter A Choice Seperated By ';' ",widget=forms.Textarea(attrs={'rows':2, 'cols':15}))
     
 
 #Get Quesitons
 def index(request):
-    latest_question = Question.objects.order_by('-pub_date').filter(open_for_all=True)
+    if request.user.is_authenticated:
+        latest_question = Question.objects.order_by('-pub_date').filter(open_for_all=True)
+    else:
+        latest_question = Question.objects.order_by('-pub_date').filter(open_for_all=True).filter(login_required=False)
+
+        
     return render(request,"polls/index.html",{
         'latest_question' : latest_question
     })
@@ -50,8 +63,15 @@ def results(request,question_id):
 #Vote For A Poll
 def vote(request,question_id):
     qid= helpers.hextoint(question_id)
-
+    
     question = get_object_or_404(Question,pk=qid)
+    if question.voted_by == request.user:
+        return render(request,"polls/details.html",{
+            'question':question,
+            "error":"You Have Already Voted",
+        })
+    else:
+        pass
     try:
         selected_choice = question.choice_set.get(pk=request.POST['choice'])
     except(KeyError,Choice.DoesNotExist):
@@ -81,7 +101,10 @@ def resultsData(request,question_id):
 def addPoll(request):
     if request.method == 'POST':
         choices=[]
-        q_form = Get_Question(request.POST,prefix='question')
+        if request.user.is_authenticated:
+            q_form = Get_Question_Auth(request.POST,prefix='question')
+        else:
+            q_form = Get_Question(request.POST,prefix='question')
         c_form = Get_Choices(request.POST,prefix='choice')
         if(c_form.is_valid() and q_form.is_valid()):
             question = q_form.save()
@@ -101,7 +124,10 @@ def addPoll(request):
         })
     else:
         c_form = Get_Choices(prefix="choice")
-        q_form = Get_Question(prefix='question')
+        if request.user.is_authenticated:
+            q_form = Get_Question_Auth(prefix='question')
+        else:
+            q_form = Get_Question(prefix='question')
         return render(request,"polls/addPoll.html",{
             "q_form": q_form,
             "c_form": c_form,

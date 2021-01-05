@@ -8,7 +8,8 @@ class Question(models.Model):
     question_text = models.TextField(max_length=400)
     pub_date = models.DateTimeField('Date Published',default=datetime.datetime.now())
     open_for_all = models.BooleanField(default=True)
-    voted_by = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
+    voted_by = models.ManyToManyField(User,null=True,blank=True)
+    login_required = models.BooleanField(default=False)
     def __str__(self):
         return self.question_text
     def link(self):
