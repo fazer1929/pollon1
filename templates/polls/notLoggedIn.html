@@ -1,11 +1,8 @@
 {% extends 'polls/layout.html' %} {% block body %}
 <div style="text-align: center">
-	<h3>It Appears That You Have Already Voted On This Poll.</h3>
-	<a
-		class="btn btn-outline-success mb-4 mt-4"
-		href="{% url 'polls:results' question.link %}"
-	>
-		See Poll Results
+	<h3>You Can't See This Poll As You Have Not Logged In.</h3>
+	<a class="btn btn-outline-success mb-4 mt-4" href="{% url 'pages:index' %}accounts/login">
+		Log In
 	</a>
 	<br />
 	<a class="btn btn-outline-primary mb-4 mt-4" href="{% url 'polls:index' %}">

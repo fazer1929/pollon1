@@ -2,53 +2,34 @@ from django.shortcuts import render,get_object_or_404
 from django.http import Http404,HttpResponseRedirect,JsonResponse,HttpResponse
 from django.urls import reverse
 from django import forms
+from .forms import Get_Question,Get_Question_Auth,Get_Choices
 from . import helpers
 
 # Create your views here.
 from .models import Question , Choice
 
 
-##Model Form
-class Get_Question(forms.ModelForm):
-    class Meta:
-        model = Question
-        fields = ['question_text','open_for_all']
-        widgets = {
-          'question_text': forms.Textarea(attrs={'rows':4, 'cols':15}),
-        }
-
-class Get_Question_Auth(forms.ModelForm):
-    class Meta:
-        model = Question
-        fields = ['question_text','open_for_all','login_required']
-        widgets = {
-          'question_text': forms.Textarea(attrs={'rows':4, 'cols':15}),
-        }
-
-class Get_Choices(forms.Form):
-    choice = forms.CharField(label="Enter A Choice Seperated By ';' ",widget=forms.Textarea(attrs={'rows':2, 'cols':15}))
-    
-
 #Get Quesitons
 def index(request):
     if request.user.is_authenticated:
-        latest_question = Question.objects.order_by('-pub_date').filter(open_for_all=True)
+        latest_questions = Question.objects.order_by('-pub_date').filter(open_for_all=True)
     else:
-        latest_question = Question.objects.order_by('-pub_date').filter(open_for_all=True).filter(login_required=False)
+        latest_questions = Question.objects.order_by('-pub_date').filter(open_for_all=True).filter(login_required=False)
 
         
     return render(request,"polls/index.html",{
-        'latest_question' : latest_question
+        'latest_questions' : latest_questions
     })
 
+
 #Get Details For A Poll
-def details(request,question_id):
+def votingPage(request,question_id):
     qid= helpers.hextoint(question_id)
     try:
         question = Question.objects.get(pk=int(qid))
         if question.login_required:
             if not request.user.is_authenticated:
-                pass
+                return render(request,'polls/notLoggedIn.html')
             else: 
                 if len(question.voted_by.filter(pk=request.user.id))>0:
                     return render(request,'polls/alreadyVoted.html',{
@@ -57,9 +38,11 @@ def details(request,question_id):
 
     except Question.DoesNotExist:
         raise Http404("Question Dies Not Exist")
-    return render(request,"polls/details.html",{
+
+    return render(request,"polls/votingPage.html",{
         'question':question
     })
+
 
 #Get Results For A Poll
 def results(request,question_id):
@@ -69,15 +52,15 @@ def results(request,question_id):
         'question':question
     })
 
+
 #Vote For A Poll
 def vote(request,question_id):
     qid= helpers.hextoint(question_id)
     question = get_object_or_404(Question,pk=qid)
-    if question.login_required:
-        question.voted_by.add(request.user)
-
+    
     try:
         selected_choice = question.choice_set.get(pk=request.POST['choice'])
+
     except(KeyError,Choice.DoesNotExist):
         return render(request,"polls/details.html",{
             'question':question,
@@ -85,9 +68,13 @@ def vote(request,question_id):
         
         })
     else:
+        if question.login_required:
+            question.voted_by.add(request.user)
+            
         selected_choice.votes+=1
         selected_choice.save()
         return HttpResponseRedirect(reverse('polls:results',args=(question_id,)))
+
 
 #Return A Chart
 def resultsData(request,question_id):
@@ -100,6 +87,7 @@ def resultsData(request,question_id):
             i.choice_text:i.votes
         })
     return JsonResponse(votes,safe=False)
+
 
 #Add A Poll
 def addPoll(request):
