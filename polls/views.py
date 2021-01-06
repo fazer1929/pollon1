@@ -100,6 +100,9 @@ def addPoll(request):
         c_form = Get_Choices(request.POST,prefix='choice')
         if(c_form.is_valid() and q_form.is_valid()):
             question = q_form.save()
+            if request.user.is_authenticated:
+                question.created_by = request.user
+                question.save()
             qid = question.link()
             # qid= helpers.hextoint(ques) 
             data = c_form.cleaned_data["choice"]
