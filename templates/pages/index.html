@@ -1,17 +1,12 @@
+{% extends 'polls/layout.html' %}
 {% load static %}
+    {% block head %}
+        <link rel="stylesheet" href="{% static 'pages/home.css' %}">
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'pages/home.css' %}">
-    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.png' %}"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
-    <title>Pollon</title>
-</head>
-<body>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+
+    {% endblock %}
+{% block body %}
     <div class="jumbotron">
         <div class="heading">Pollon - Want a poll? We got you.</div>
         <div class="split">
@@ -32,5 +27,5 @@
             Made With Love For <strong>Who Wants To Be A Hackionaire?</strong>
         </div>
     </div>
-</body>
-</html>
+
+{% endblock %}

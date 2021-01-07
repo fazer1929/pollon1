@@ -20,11 +20,12 @@ from django.views.static import serve
 from django.conf.urls import url
 from django.conf.urls.static import static
 from django.views.generic import RedirectView
+from pages import views as pageViews
 
 urlpatterns = [
     path('', include('pages.urls')),
     path('polls/', include('polls.urls')),
     path('admin/', admin.site.urls),
-    path('accounts/profile/',RedirectView.as_view(url='/')),
+    path('accounts/profile/',pageViews.profile,name="profile"),
     path('accounts/', include('allauth.urls')), 
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

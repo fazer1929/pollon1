@@ -22,6 +22,47 @@ def index(request):
     })
 
 
+#Add A Poll
+def addPoll(request):
+    if request.method == 'POST':
+        choices=[]
+        if request.user.is_authenticated:
+            q_form = Get_Question_Auth(request.POST,prefix='question')
+        else:
+            q_form = Get_Question(request.POST,prefix='question')
+        c_form = Get_Choices(request.POST,prefix='choice')
+        if(c_form.is_valid() and q_form.is_valid()):
+            question = q_form.save()
+            if request.user.is_authenticated:
+                question.created_by = request.user
+                question.save()
+            qid = question.link()
+            # qid= helpers.hextoint(ques) 
+            data = c_form.cleaned_data["choice"]
+            choices =data.split(";")
+            for choice in choices:
+                ch = Choice(choice_text=choice,question=question)
+                ch.save()
+
+        return render(request,"polls/addPoll.html",{
+            "q_form": q_form,
+            "c_form": c_form,
+            'submitted':True,
+            "qid":qid
+        })
+    else:
+        c_form = Get_Choices(prefix="choice")
+        if request.user.is_authenticated:
+            q_form = Get_Question_Auth(prefix='question')
+        else:
+            q_form = Get_Question(prefix='question')
+        return render(request,"polls/addPoll.html",{
+            "q_form": q_form,
+            "c_form": c_form,
+            'submitted':False,
+        })
+
+
 #Get Details For A Poll
 def votingPage(request,question_id):
     qid= helpers.hextoint(question_id)
@@ -87,44 +128,3 @@ def resultsData(request,question_id):
             i.choice_text:i.votes
         })
     return JsonResponse(votes,safe=False)
-
-
-#Add A Poll
-def addPoll(request):
-    if request.method == 'POST':
-        choices=[]
-        if request.user.is_authenticated:
-            q_form = Get_Question_Auth(request.POST,prefix='question')
-        else:
-            q_form = Get_Question(request.POST,prefix='question')
-        c_form = Get_Choices(request.POST,prefix='choice')
-        if(c_form.is_valid() and q_form.is_valid()):
-            question = q_form.save()
-            if request.user.is_authenticated:
-                question.created_by = request.user
-                question.save()
-            qid = question.link()
-            # qid= helpers.hextoint(ques) 
-            data = c_form.cleaned_data["choice"]
-            choices =data.split(";")
-            for choice in choices:
-                ch = Choice(choice_text=choice,question=question)
-                ch.save()
-
-        return render(request,"polls/addPoll.html",{
-            "q_form": q_form,
-            "c_form": c_form,
-            'submitted':True,
-            "qid":qid
-        })
-    else:
-        c_form = Get_Choices(prefix="choice")
-        if request.user.is_authenticated:
-            q_form = Get_Question_Auth(prefix='question')
-        else:
-            q_form = Get_Question(prefix='question')
-        return render(request,"polls/addPoll.html",{
-            "q_form": q_form,
-            "c_form": c_form,
-            'submitted':False,
-        })
