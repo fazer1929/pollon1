@@ -5,10 +5,20 @@
 {% for question in questions %}
 <div class="card mb-3">
     <div class="card-body">
-        <p class="lead">
+        <p class="lead mb-3">
+            <strong>
 {{question}}
+</strong>
         </p>
-        <a href="{% url 'polls:votingPage' question.link %}" class="btn btn-primary btn-sm">Get Link</a>
+        <p>
+            Link:
+        <input
+		type="text"
+		value="{{request.get_host}}/polls/{{question.link}}"
+		id="myInput"
+		class="form-control mb-2"
+		disabled
+	/></p>
         <a href="{% url 'polls:results' question.link %}" class="btn btn-secondary btn-sm">Results</a>
     </div>
 </div> 

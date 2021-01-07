@@ -10,7 +10,7 @@ def index(request):
 #See User Profile
 def profile(request):
     if request.user.is_authenticated:
-        questions = request.user.question_created.all()
+        questions = request.user.question_created.all().order_by('-pub_date')
         print(questions)
         return render(request,'pages/profile.html',{
             "questions":questions

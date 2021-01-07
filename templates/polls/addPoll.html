@@ -50,25 +50,24 @@
 		class="form-control mb-2"
 		disabled
 	/>
-	<button class="btn btn-outline-success mt-2" id="copyButton">
+	<button onclick="myCopy()" class="btn btn-outline-success mt-2" id="copyButton">
 		Copy Link
 	</button>
 	{% endif %}
 </div>
 
 <script>
-	window.onload = () => {
 		function myCopy() {
+			console.log("bc")
 			var copyText = document.getElementById("myInput");
-
+			copyText.disabled=false
 			copyText.select();
 			copyText.setSelectionRange(0, 99999); /* For mobile devices */
 
 			document.execCommand("copy");
+			copyText.disabled=true
 		}
 		const btn = document.getElementById("copyButton");
-		btn.addEventListener("click", () => myCopy);
-	};
 </script>
 
 {% endblock %}

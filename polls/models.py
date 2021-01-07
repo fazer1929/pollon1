@@ -8,7 +8,7 @@ class Question(models.Model):
     question_text = models.TextField(max_length=400)
     pub_date = models.DateTimeField('Date Published',default=datetime.datetime.now())
     open_for_all = models.BooleanField(default=True)
-    voted_by = models.ManyToManyField(User,null=True,blank=True,related_name="question_voted")
+    voted_by = models.ManyToManyField(User,blank=True,related_name="question_voted")
     created_by = models.ForeignKey(User,blank=True,null=True,related_name="question_created",on_delete=models.CASCADE)
     login_required = models.BooleanField(default=False)
     def __str__(self):
