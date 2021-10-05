@@ -2,6 +2,7 @@
 A web app that enables user to conduct different kinds of polls on the go. 
 
 ## Features
+- Conduct both open to public as well as private polls
 - Conduct polls with or without logging in
 - Control who can vote on the polls you create
 - No limit on choices to a question
